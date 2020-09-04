@@ -1,1 +1,2 @@
-# framework
+# 项目介绍
+Java工程公共代码记录
