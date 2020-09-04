@@ -10,7 +10,7 @@
 
 .idea
 
-.iml
+*.iml
 
 # Generated files
 .idea/**/contentModel.xml
