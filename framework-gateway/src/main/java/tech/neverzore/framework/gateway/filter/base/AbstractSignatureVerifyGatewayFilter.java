@@ -25,6 +25,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import tech.neverzore.framework.common.lang.Character;
+import tech.neverzore.framework.common.reflect.ReflectionUtil;
 import tech.neverzore.framework.gateway.filter.support.FilterConst;
 import tech.neverzore.framework.gateway.filter.support.FilterOrder;
 import tech.neverzore.framework.gateway.filter.support.RequestPartHashPair;
@@ -36,7 +37,6 @@ import tech.neverzore.framework.logging.core.LogType;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 /**
  * @author zhouzb
@@ -70,9 +71,6 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
         ServerHttpRequest request = exchange.getRequest();
 
         HttpMethod method = request.getMethod();
-        InetSocketAddress remoteAddress = request.getRemoteAddress();
-        MediaType contentType = request.getHeaders().getContentType();
-
 
         if (HttpMethod.GET.equals(method)) {
             boolean succeed = signatureVerifyGet(exchange);
@@ -143,7 +141,7 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
                 || AbstractSignatureVerifyGatewayFilter.TIMESTAMP.equals(key);
     }
 
-    private StringBuilder generateSignaturePart(String key, Object value) {
+    private StringBuilder generateSignaturePart(String key, Object value, boolean multiValue) {
         if (value == null) {
             return new StringBuilder(0);
         }
@@ -151,8 +149,32 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
         Object v = value;
 
         if (List.class.isAssignableFrom(value.getClass())) {
-            if (((List<?>) value).size() == 1) {
-                v = ((List<?>) value).get(0);
+            if (CollectionUtils.isEmpty((List) value)) {
+                return new StringBuilder("[]");
+            }
+
+            if (multiValue) {
+                if (((List<?>) value).size() == 1) {
+                    v = ((List<?>) value).get(0);
+                }
+            } else {
+                Class<?> genericType = ReflectionUtil.getSuperClassGenericType(v.getClass(), 0);
+                if (Map.class.isAssignableFrom(genericType)) {
+                    List<StringBuilder> collect = (List<StringBuilder>) ((List) value).stream()
+                            .filter(x -> x != null)
+                            .map(item -> {
+                                Map<String, Object> mItem = (Map<String, Object>) item;
+                                List<StringBuilder> stringBuilders = generateSignatureParts(mItem);
+                                return stringBuilders;
+                            })
+                            .flatMap(item -> ((List) item).stream())
+                            .collect(Collectors.toList());
+
+                    v = generateSignatureContent(collect);
+                }
+
+                // TODO
+                // Other type
             }
         }
 
@@ -167,7 +189,7 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
                 return;
             }
 
-            StringBuilder part = generateSignaturePart(requestPartHashPair.getKey(), requestPartHashPair.getHash());
+            StringBuilder part = generateSignaturePart(requestPartHashPair.getKey(), requestPartHashPair.getHash(), false);
             parts.add(part);
         });
 
@@ -183,7 +205,7 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
             }
 
             T values = body.get(key);
-            StringBuilder part = generateSignaturePart(key, values);
+            StringBuilder part = generateSignaturePart(key, values, false);
             parts.add(part);
         });
 
@@ -199,7 +221,7 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
             }
 
             List<T> values = body.get(key);
-            StringBuilder part = generateSignaturePart(key, values);
+            StringBuilder part = generateSignaturePart(key, values, true);
             parts.add(part);
         });
 
