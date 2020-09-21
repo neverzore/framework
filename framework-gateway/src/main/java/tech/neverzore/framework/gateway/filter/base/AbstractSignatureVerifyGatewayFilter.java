@@ -158,20 +158,21 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
                     v = ((List<?>) value).get(0);
                 }
             } else {
-                Class<?> genericType = ReflectionUtil.getSuperClassGenericType(v.getClass(), 0);
-                if (Map.class.isAssignableFrom(genericType)) {
-                    List<StringBuilder> collect = (List<StringBuilder>) ((List) value).stream()
-                            .filter(x -> x != null)
-                            .map(item -> {
+                List<StringBuilder> collect = (List<StringBuilder>) ((List) value).stream()
+                        .filter(x -> x != null)
+                        .map(item -> {
+                            if (Map.class.isAssignableFrom(item.getClass())) {
                                 Map<String, Object> mItem = (Map<String, Object>) item;
                                 List<StringBuilder> stringBuilders = generateSignatureParts(mItem);
                                 return stringBuilders;
-                            })
-                            .flatMap(item -> ((List) item).stream())
-                            .collect(Collectors.toList());
+                            }
 
-                    v = generateSignatureContent(collect);
-                }
+                            return new StringBuilder();
+                        })
+                        .flatMap(item -> ((List) item).stream())
+                        .collect(Collectors.toList());
+
+                v = generateSignatureContent(collect);
 
                 // TODO
                 // Other type
