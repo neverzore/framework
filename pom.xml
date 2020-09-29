@@ -4,20 +4,20 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>tech.neverzore.framework</groupId>
-    <artifactId>framework-parent</artifactId>
+    <groupId>tech.neverzore.common</groupId>
+    <artifactId>common-parent</artifactId>
     <packaging>pom</packaging>
     <version>0.0.1</version>
     <modules>
-        <module>framework-gateway</module>
-        <module>framework-logging</module>
-        <module>framework-common</module>
-        <module>framework-security</module>
-        <module>framework-domain</module>
+        <module>common-gateway</module>
+        <module>common-logging</module>
+        <module>common-util</module>
+        <module>common-security</module>
+        <module>common-domain</module>
     </modules>
 
-    <name>framework-parent</name>
-    <url>http://www.example.com</url>
+    <name>common-parent</name>
+    <url>http://www.neverzore.tech</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
