@@ -27,17 +27,29 @@ import tech.neverzore.common.domain.model.TraceableModel;
 public abstract class UserMetaObjectHandler implements MetaObjectHandler {
     abstract Long getUserId();
 
+    private String cid;
+    private String uid;
+
+    public UserMetaObjectHandler() {
+        this("cid", "uid");
+    }
+
+    public UserMetaObjectHandler(String cid, String uid) {
+        this.cid = cid;
+        this.uid = uid;
+    }
+
     @Override
     public void insertFill(MetaObject metaObject) {
         if (metaObject.getOriginalObject() instanceof TraceableModel) {
-            this.strictUpdateFill(metaObject, "cid", () -> getUserId(), Long.class);
+            this.strictUpdateFill(metaObject, this.cid, () -> getUserId(), Long.class);
         }
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
         if (metaObject.getOriginalObject() instanceof TraceableModel) {
-            this.strictUpdateFill(metaObject, "uid", () -> getUserId(), Long.class);
+            this.strictUpdateFill(metaObject, this.uid, () -> getUserId(), Long.class);
         }
     }
 }
