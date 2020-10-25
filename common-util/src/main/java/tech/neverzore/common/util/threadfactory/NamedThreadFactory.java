@@ -22,8 +22,8 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * @Author: zhouzb
- * @Date: 2019/12/19
+ * @author: zhouzb
+ * @date: 2019/12/19
  */
 public class NamedThreadFactory implements ThreadFactory {
     private String app;

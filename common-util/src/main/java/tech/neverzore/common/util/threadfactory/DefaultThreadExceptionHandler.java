@@ -21,8 +21,8 @@ import tech.neverzore.common.logging.core.LogBuilder;
 import tech.neverzore.common.logging.core.LogContent;
 
 /**
- * @Author: zhouzb
- * @Date: 2019/12/18
+ * @author: zhouzb
+ * @date: 2019/12/18
  */
 @Slf4j
 public class DefaultThreadExceptionHandler implements Thread.UncaughtExceptionHandler {

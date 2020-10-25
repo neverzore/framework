@@ -39,7 +39,6 @@ import java.util.Map;
  */
 @Getter
 @Setter
-@Slf4j
 public abstract class AbstractServiceAccessInterceptor implements RequestInterceptor {
     private RSA rsa;
     private Charset charset;

@@ -21,8 +21,8 @@ import tech.neverzore.common.util.response.Response;
 import java.util.Collection;
 
 /**
- * @Author: zhouzb
- * @Date: 2019/7/19
+ * @author: zhouzb
+ * @date: 2019/7/19
  */
 public interface IBaseService<E, T> {
     /**

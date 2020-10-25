@@ -27,7 +27,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 /**
- * @Author: zhouzb
+ * @author: zhouzb
  * @Date: 2019/7/19
  */
 public abstract class BaseServiceImpl<E extends BaseModel, I extends Serializable> implements IBaseService<E, I> {

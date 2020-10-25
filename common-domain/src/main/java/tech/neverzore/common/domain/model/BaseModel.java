@@ -21,8 +21,8 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * @Author: zhouzb
- * @Date: 2019/12/19
+ * @author: zhouzb
+ * @date: 2019/12/19
  */
 @Data
 public class BaseModel implements Serializable {

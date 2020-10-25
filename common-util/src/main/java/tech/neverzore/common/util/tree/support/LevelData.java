@@ -21,8 +21,8 @@ import java.util.List;
 /**
  * 父子数据接口
  *
- * @Author: zhouzb
- * @Date: 2019/6/10
+ * @author: zhouzb
+ * @date: 2019/6/10
  */
 public interface LevelData {
     /**

@@ -17,8 +17,8 @@
 package tech.neverzore.common.util.response;
 
 /**
- * @Author: zhouzb
- * @Date: 2019/7/19
+ * @author: zhouzb
+ * @date: 2019/7/19
  */
 public enum ResponseStatus {
     SUCCESS("200", "成功"),

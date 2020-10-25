@@ -25,8 +25,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 树形数据工具
  *
- * @Author: zhouzb
- * @Date: 2019/2/10
+ * @author: zhouzb
+ * @date: 2019/2/10
  */
 public class TreeUtil {
     /**

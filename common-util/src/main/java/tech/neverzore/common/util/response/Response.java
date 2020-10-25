@@ -24,8 +24,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.Serializable;
 
 /**
- * @Author: zhouzb
- * @Date: 2019/7/19
+ * @author: zhouzb
+ * @date: 2019/7/19
  */
 @Data
 public final class Response<E> implements Serializable {

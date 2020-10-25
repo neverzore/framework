@@ -22,8 +22,8 @@ import lombok.EqualsAndHashCode;
 import java.time.LocalDateTime;
 
 /**
- * @Author: zhouzb
- * @Date: 2019/12/19
+ * @author: zhouzb
+ * @date: 2019/12/19
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
