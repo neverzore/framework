@@ -55,23 +55,23 @@ public class JwtAuthGatewayFilter extends AbstractJwtAuthGatewayFilter {
         try {
             claims = jwtManager.decode(authToken);
         } catch (ExpiredJwtException e) {
-            LogContent content = LogBuilder.generate(FilterConst.JWT_FILTER, e.getMessage());
-            log.error(content.toString(), e);
+            String content = LogBuilder.generate(FilterConst.JWT_FILTER, e.getMessage());
+            log.error(content, e);
         } catch (UnsupportedJwtException e) {
-            LogContent content = LogBuilder.generate(FilterConst.JWT_FILTER, e.getMessage());
-            log.error(content.toString(), e);
+            String content = LogBuilder.generate(FilterConst.JWT_FILTER, e.getMessage());
+            log.error(content, e);
         } catch (MalformedJwtException e) {
-            LogContent content = LogBuilder.generate(FilterConst.JWT_FILTER, e.getMessage());
-            log.error(content.toString(), e);
+            String content = LogBuilder.generate(FilterConst.JWT_FILTER, e.getMessage());
+            log.error(content, e);
         } catch (SignatureException e) {
-            LogContent content = LogBuilder.generate(FilterConst.JWT_FILTER, e.getMessage());
-            log.error(content.toString(), e);
+            String content = LogBuilder.generate(FilterConst.JWT_FILTER, e.getMessage());
+            log.error(content, e);
         } catch (IllegalArgumentException e) {
-            LogContent content = LogBuilder.generate(FilterConst.JWT_FILTER, e.getMessage());
-            log.error(content.toString(), e);
+            String content = LogBuilder.generate(FilterConst.JWT_FILTER, e.getMessage());
+            log.error(content, e);
         } catch (Throwable t) {
-            LogContent content = LogBuilder.generate(FilterConst.JWT_FILTER, t.getMessage());
-            log.error(content.toString(), t);
+            String content = LogBuilder.generate(FilterConst.JWT_FILTER, t.getMessage());
+            log.error(content, t);
         }
 
         return claims;

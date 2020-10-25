@@ -35,7 +35,7 @@ public class DefaultThreadExceptionHandler implements Thread.UncaughtExceptionHa
     @Override
     public void uncaughtException(Thread t, Throwable e) {
         String happening = String.format("thread %s, error %s", t.getName(), e.getMessage());
-        LogContent content = LogBuilder.generate(app, happening);
-        log.error(content.toString(), e);
+        String content = LogBuilder.generate(app, happening);
+        log.error(content, e);
     }
 }

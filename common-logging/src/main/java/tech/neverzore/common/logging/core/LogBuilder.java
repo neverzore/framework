@@ -32,6 +32,7 @@ public class LogBuilder {
     private String source;
     private LogType type;
     private String happening;
+    private String error;
     private String suggestion;
 
     private LogBuilder() {
@@ -44,19 +45,22 @@ public class LogBuilder {
     }
 
     public LogContent build() {
-        return new LogContent(this.source, this.happening, this.suggestion, this.type);
+        return new LogContent(this.source, this.happening, this.error, this.suggestion, this.type);
     }
 
-    public static LogContent generate(String app, String happening) {
+    public static String generate(String app, String happening) {
         return generate(app, happening, StringUtils.EMPTY);
     }
 
-    public static LogContent generate(String app, String happening, String suggestion) {
-        return generate(app, happening, suggestion, LogType.NORMAL);
+    public static String generate(String app, String happening, String error) {
+        return generate(app, happening, error, StringUtils.EMPTY);
     }
 
-    public static LogContent generate(String app, String happening, String suggestion, LogType logType) {
-        LogContent content = LogBuilder.builder().setSource(app).setType(logType).setHappening(happening).setSuggestion(suggestion).build();
-        return content;
+    public static String generate(String app, String happening, String error, String suggestion) {
+        return generate(app, happening, error, suggestion, LogType.NORMAL);
+    }
+
+    public static String generate(String app, String happening, String error, String suggestion, LogType logType) {
+        return LogBuilder.builder().setSource(app).setType(logType).setHappening(happening).setError(error).setSuggestion(suggestion).build().toString();
     }
 }

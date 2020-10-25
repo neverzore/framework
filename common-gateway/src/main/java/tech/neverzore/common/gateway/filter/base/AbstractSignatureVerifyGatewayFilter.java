@@ -114,8 +114,8 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
                         return chain.filter(mutatedExchange);
                     })
                     .doOnError((throwable) -> {
-                        LogContent content = LogBuilder.generate(FilterConst.SIGNATURE_FILTER, throwable.getMessage());
-                        log.error(content.toString(), throwable);
+                        String content = LogBuilder.generate(FilterConst.SIGNATURE_FILTER, throwable.getMessage());
+                        log.error(content, throwable);
                     })
                     .onErrorResume(Throwable.class, (content) -> unAuthorizedResponse(exchange.getResponse()));
         }
@@ -344,8 +344,8 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
             try {
                 return signatureVerifyPost(exchange, requestBody);
             } catch (IOException e) {
-                LogContent content = LogBuilder.generate(FilterConst.SIGNATURE_FILTER, e.getMessage());
-                log.error(content.toString(), e);
+                String content = LogBuilder.generate(FilterConst.SIGNATURE_FILTER, e.getMessage());
+                log.error(content, e);
 
                 return false;
             }

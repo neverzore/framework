@@ -26,26 +26,33 @@ public class LogContent {
     private static final String APP = "[APP ";
     private static final String TYPE = "[TYPE ";
     private static final String HAP = "[HAP ";
+    private static final String ERR = "[ERR ";
     private static final String SUG = "[SUG ";
     private static final String CLOSURE = "] ";
 
     private String app;
     private LogType type;
     private String happening;
+    private String error;
     private String suggestion;
 
     LogContent(String app, String happening) {
         this(app, happening, StringUtils.EMPTY);
     }
 
-    LogContent(String app, String happening, String suggestion) {
-        this(app, happening, suggestion, LogType.NORMAL);
+    LogContent(String app, String happening, String error) {
+        this(app, happening, error, "StringUtils");
     }
 
-    LogContent(String app, String happening, String suggestion, LogType type) {
+    LogContent(String app, String happening, String error, String suggestion) {
+        this(app, happening, error, suggestion, LogType.NORMAL);
+    }
+
+    LogContent(String app, String happening, String error, String suggestion, LogType type) {
         this.app = app;
         this.type = type;
         this.happening = happening;
+        this.error = error;
         this.suggestion = suggestion;
     }
 
@@ -58,6 +65,10 @@ public class LogContent {
 
         if (!StringUtils.isEmpty(this.happening)) {
             builder = builder.append(HAP).append(this.happening).append(CLOSURE);
+        }
+
+        if (!StringUtils.isEmpty(this.error)) {
+            builder = builder.append(ERR).append(this.error).append(CLOSURE);
         }
 
         if (!StringUtils.isEmpty(this.suggestion)) {
