@@ -62,9 +62,9 @@ public class JwtAuthGatewayFilterFactory extends AbstractGatewayFilterFactory<Jw
         String source = config.getSource();
         AuthTokenSource sourceByValue = AuthTokenSource.getSourceByValue(source);
         if (sourceByValue == null) {
-            jwtFilter.setAuthTokenSource(AuthTokenSource.HEADER);
+            jwtFilter.setTokenSource(AuthTokenSource.HEADER);
         } else {
-            jwtFilter.setAuthTokenSource(sourceByValue);
+            jwtFilter.setTokenSource(sourceByValue);
         }
 
         return jwtFilter;

@@ -59,6 +59,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -403,16 +404,11 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
     protected boolean signatureVerifyGet(ServerWebExchange exchange) {
         ServerHttpRequest request = exchange.getRequest();
         MultiValueMap<String, String> queryParams = request.getQueryParams();
-        if (queryParams == null || queryParams.isEmpty()) {
+        if (Objects.isNull(queryParams) || queryParams.isEmpty()) {
             if (log.isWarnEnabled()) {
                 String happening = String.format("request %s, uri %s, remote %s, GET request query parameter is empty.",
                         request.getId(), String.valueOf(request.getURI()), request.getRemoteAddress());
-                LogContent content = LogBuilder.builder()
-                        .setSource(FilterConst.SIGNATURE_FILTER)
-                        .setHappening(happening)
-                        .build();
-
-                log.warn(content.toString());
+                log.warn(LogBuilder.generate(FilterConst.SIGNATURE_FILTER, happening));
             }
 
             return false;
@@ -438,8 +434,7 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
             if (log.isWarnEnabled()) {
                 String happening = String.format("request %s, uri %s, remote %s, request content-type is null, resolved to TEXT_PLAIN",
                         request.getId(), String.valueOf(request.getURI()), request.getRemoteAddress());
-                LogContent content = LogBuilder.builder().setSource(FilterConst.SIGNATURE_FILTER).setHappening(happening).build();
-                log.warn(content.toString());
+                log.warn(LogBuilder.generate(FilterConst.SIGNATURE_FILTER, happening));
             }
 
             contentType = MediaType.TEXT_PLAIN;
@@ -450,13 +445,7 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
             if (log.isWarnEnabled()) {
                 String happening = String.format("request %s, uri %s, remote %s, request charset is null, resolved to UTF-8",
                         request.getId(), String.valueOf(request.getURI()), request.getRemoteAddress());
-
-                LogContent content = LogBuilder.builder()
-                        .setSource(FilterConst.SIGNATURE_FILTER)
-                        .setHappening(happening)
-                        .build();
-
-                log.warn(content.toString());
+                log.warn(LogBuilder.generate(FilterConst.SIGNATURE_FILTER, happening));
             }
 
             charset = StandardCharsets.UTF_8;
@@ -502,7 +491,6 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
 
         MultiValueMap<String, Part> multiParts = atomicMultiParts.get();
         List<RequestPartHashPair> requestPartHashPairs = new CopyOnWriteArrayList<>();
-
         multiParts.keySet().stream().sorted().forEachOrdered(key -> {
             if (this.isFixedKey(key)) {
                 return;

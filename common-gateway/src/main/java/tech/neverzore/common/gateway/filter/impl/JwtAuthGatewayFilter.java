@@ -25,11 +25,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
 import tech.neverzore.common.gateway.filter.base.AbstractJwtAuthGatewayFilter;
-import tech.neverzore.common.gateway.filter.support.FilterConst;
 import tech.neverzore.common.gateway.filter.support.FilterOrder;
 import tech.neverzore.common.logging.core.LogBuilder;
-import tech.neverzore.common.logging.core.LogContent;
 import tech.neverzore.common.security.jwt.support.JwtManager;
+
+import java.util.Objects;
 
 /**
  * @author zhouzb
@@ -45,7 +45,6 @@ public class JwtAuthGatewayFilter extends AbstractJwtAuthGatewayFilter {
         this.jwtManager = jwtManager;
     }
 
-    @Override
     protected Claims decode(String authToken) {
         if (StringUtils.isBlank(authToken)) {
             return null;
@@ -55,26 +54,36 @@ public class JwtAuthGatewayFilter extends AbstractJwtAuthGatewayFilter {
         try {
             claims = jwtManager.decode(authToken);
         } catch (ExpiredJwtException e) {
-            String content = LogBuilder.generate(FilterConst.JWT_FILTER, e.getMessage());
+            String content = LogBuilder.generate(JwtAuthGatewayFilter.class.getCanonicalName(), e.getMessage());
             log.error(content, e);
         } catch (UnsupportedJwtException e) {
-            String content = LogBuilder.generate(FilterConst.JWT_FILTER, e.getMessage());
+            String content = LogBuilder.generate(JwtAuthGatewayFilter.class.getCanonicalName(), e.getMessage());
             log.error(content, e);
         } catch (MalformedJwtException e) {
-            String content = LogBuilder.generate(FilterConst.JWT_FILTER, e.getMessage());
+            String content = LogBuilder.generate(JwtAuthGatewayFilter.class.getCanonicalName(), e.getMessage());
             log.error(content, e);
         } catch (SignatureException e) {
-            String content = LogBuilder.generate(FilterConst.JWT_FILTER, e.getMessage());
+            String content = LogBuilder.generate(JwtAuthGatewayFilter.class.getCanonicalName(), e.getMessage());
             log.error(content, e);
         } catch (IllegalArgumentException e) {
-            String content = LogBuilder.generate(FilterConst.JWT_FILTER, e.getMessage());
+            String content = LogBuilder.generate(JwtAuthGatewayFilter.class.getCanonicalName(), e.getMessage());
             log.error(content, e);
         } catch (Throwable t) {
-            String content = LogBuilder.generate(FilterConst.JWT_FILTER, t.getMessage());
+            String content = LogBuilder.generate(JwtAuthGatewayFilter.class.getCanonicalName(), t.getMessage());
             log.error(content, t);
         }
 
         return claims;
+    }
+
+    @Override
+    protected String getAudience(String authToken) {
+        Claims claims = decode(authToken);
+        if (Objects.isNull(claims)) {
+            return StringUtils.EMPTY;
+        }
+
+        return claims.getAudience();
     }
 
     @Override
