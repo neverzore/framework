@@ -30,8 +30,8 @@ public class LogContent {
     private static final String SUG = "[SUG ";
     private static final String CLOSURE = "] ";
 
-    private String app;
     private LogType type;
+    private String app;
     private String happening;
     private String error;
     private String suggestion;

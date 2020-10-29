@@ -16,9 +16,62 @@
 
 package tech.neverzore.common.logging.aspect;
 
+import com.alibaba.fastjson.JSON;
+import org.apache.commons.lang3.StringUtils;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import tech.neverzore.common.logging.core.LogBuilder;
+import tech.neverzore.common.logging.core.LogType;
+import tech.neverzore.common.logging.core.Logger;
+
 /**
  * @author: zhouzb
  * @date: 2020/10/29
  */
+@Aspect
 public class LogAspect {
+    @Pointcut("@annotation(tech.neverzore.common.logging.aspect.Log)")
+    public void execute() {
+
+    }
+
+    @Around(value = "execute() && @annotation(log)")
+    public Object around(ProceedingJoinPoint joinPoint, Log log) throws Throwable {
+        LogType type = log.type();
+
+        long begin = System.currentTimeMillis();
+        Object retVal = joinPoint.proceed();
+        long cost = System.currentTimeMillis() - begin;
+
+        Class<?> declaringType = joinPoint.getSignature().getDeclaringType();
+
+        String happening = StringUtils.EMPTY;
+
+        if (type.equals(LogType.MONITOR)) {
+            String name = joinPoint.getSignature().getName();
+            happening = String.format("Method %s, Parameter %s, Cost %s", name, JSON.toJSONString(joinPoint.getArgs()), cost);
+        }
+
+        Logger.info(declaringType, LogBuilder.generate(log.value(), happening));
+
+        return retVal;
+    }
+
+    @AfterThrowing(value = "execute() && @annotation(log)", throwing = "t")
+    public void afterThrowing(JoinPoint joinPoint, Log log, Throwable t) {
+        LogType type = log.type();
+
+        Class<?> declaringType = joinPoint.getSignature().getDeclaringType();
+        String name = joinPoint.getSignature().getName();
+        String happening = String.format("Method %s, Parameter %s executed failed", name, JSON.toJSONString(joinPoint.getArgs()));
+
+        Logger.error(declaringType,
+                LogBuilder.generate(log.value(), happening, t.getMessage(), "", type),
+                t);
+    }
+
 }

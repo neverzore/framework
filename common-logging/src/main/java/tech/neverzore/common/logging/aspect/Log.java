@@ -31,6 +31,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Log {
-    LogType type() default LogType.NORMAL;
+    LogType type() default LogType.MONITOR;
     String value() default "";
 }
