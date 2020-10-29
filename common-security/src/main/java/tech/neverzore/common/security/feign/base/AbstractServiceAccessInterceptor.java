@@ -20,9 +20,6 @@ import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.asymmetric.RSA;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import tech.neverzore.common.security.filter.support.ServiceAccessConst;
 
@@ -37,12 +34,34 @@ import java.util.Map;
  * @author zhouzb
  * @date 2020/6/22
  */
-@Getter
-@Setter
 public abstract class AbstractServiceAccessInterceptor implements RequestInterceptor {
     private RSA rsa;
     private Charset charset;
     private String principal;
+
+    public RSA getRsa() {
+        return rsa;
+    }
+
+    public void setRsa(RSA rsa) {
+        this.rsa = rsa;
+    }
+
+    public Charset getCharset() {
+        return charset;
+    }
+
+    public void setCharset(Charset charset) {
+        this.charset = charset;
+    }
+
+    public String getPrincipal() {
+        return principal;
+    }
+
+    public void setPrincipal(String principal) {
+        this.principal = principal;
+    }
 
     public AbstractServiceAccessInterceptor(String privateKey, String principal) {
         this(privateKey, principal, StandardCharsets.UTF_8);

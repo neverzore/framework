@@ -16,24 +16,63 @@
 
 package tech.neverzore.common.logging.core;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author zhouzb
  * @date 2019/5/23
  */
-@Getter
-@Setter
-@Accessors(chain = true)
 public class LogBuilder {
-    private String source;
     private LogType type;
+    private String source;
     private String happening;
     private String error;
     private String suggestion;
+
+    public String getSource() {
+        return source;
+    }
+
+    public LogBuilder setSource(String source) {
+        this.source = source;
+        return this;
+    }
+
+    public LogType getType() {
+        return type;
+    }
+
+    public LogBuilder setType(LogType type) {
+        this.type = type;
+        return this;
+    }
+
+    public String getHappening() {
+        return happening;
+    }
+
+    public LogBuilder setHappening(String happening) {
+        this.happening = happening;
+        return this;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public LogBuilder setError(String error) {
+        this.error = error;
+        return this;
+    }
+
+    public String getSuggestion() {
+        return suggestion;
+    }
+
+    public LogBuilder setSuggestion(String suggestion) {
+        this.suggestion = suggestion;
+        return this;
+    }
 
     private LogBuilder() {
         this.source = StringUtils.EMPTY;

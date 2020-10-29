@@ -18,8 +18,6 @@ package tech.neverzore.common.security.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import tech.neverzore.common.security.jwt.support.JwtManager;
 
@@ -37,8 +35,6 @@ import java.util.UUID;
  * @author zhouzb
  * @date 2019/5/28
  */
-@Getter
-@Setter
 public class DefaultJwtManager implements JwtManager {
     private static final String BEARER = "Bearer";
     private static final String ISSUER = "neverzore";

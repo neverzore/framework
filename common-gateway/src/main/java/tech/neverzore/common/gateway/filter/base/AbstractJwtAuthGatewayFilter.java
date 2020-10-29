@@ -16,9 +16,6 @@
 
 package tech.neverzore.common.gateway.filter.base;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.http.HttpHeaders;
@@ -28,6 +25,7 @@ import reactor.core.publisher.Mono;
 import tech.neverzore.common.gateway.filter.support.AuthTokenSource;
 import tech.neverzore.common.gateway.filter.support.FilterConst;
 import tech.neverzore.common.logging.core.LogBuilder;
+import tech.neverzore.common.logging.core.Logger;
 import tech.neverzore.common.security.filter.support.ServiceAccessConst;
 
 import java.net.InetSocketAddress;
@@ -36,14 +34,27 @@ import java.net.InetSocketAddress;
  * @author zhouzb
  * @date 2019/3/23
  */
-@Setter
-@Getter
-@Slf4j
 public abstract class AbstractJwtAuthGatewayFilter extends BaseAuthGatewayFilter {
     private static final String AUTHORIZE_TOKEN = "X-Auth-Token";
 
     private String tokenKey;
     private AuthTokenSource tokenSource;
+
+    public String getTokenKey() {
+        return tokenKey;
+    }
+
+    public void setTokenKey(String tokenKey) {
+        this.tokenKey = tokenKey;
+    }
+
+    public AuthTokenSource getTokenSource() {
+        return tokenSource;
+    }
+
+    public void setTokenSource(AuthTokenSource tokenSource) {
+        this.tokenSource = tokenSource;
+    }
 
     /**
      * 获取鉴权Token
@@ -97,25 +108,21 @@ public abstract class AbstractJwtAuthGatewayFilter extends BaseAuthGatewayFilter
         String authToken = getAuthorizeToken(exchange);
 
         if (StringUtils.isEmpty(authToken)) {
-            if (log.isWarnEnabled()) {
-                ServerHttpRequest request = exchange.getRequest();
-                InetSocketAddress remoteAddress = request.getRemoteAddress();
-                String happening = String.format("request %s, uri %s, remote %s, JWT token is missing",
-                        request.getId(), request.getURI(), remoteAddress);
-                log.warn(LogBuilder.generate(FilterConst.JWT_FILTER, happening));
-            }
+            ServerHttpRequest request = exchange.getRequest();
+            InetSocketAddress remoteAddress = request.getRemoteAddress();
+            String happening = String.format("request %s, uri %s, remote %s, JWT token is missing",
+                    request.getId(), request.getURI(), remoteAddress);
+            Logger.warn(getClass(), LogBuilder.generate(FilterConst.JWT_FILTER, happening));
 
             return unAuthorizedResponse(exchange.getResponse());
         }
 
         if (!isSigned(authToken)) {
-            if (log.isWarnEnabled()) {
-                ServerHttpRequest request = exchange.getRequest();
-                InetSocketAddress remoteAddress = request.getRemoteAddress();
-                String happening = String.format("request %s, uri %s, remote %s, JWT token is unsigned",
-                        request.getId(), request.getURI(), remoteAddress);
-                log.warn(LogBuilder.generate(FilterConst.JWT_FILTER, happening));
-            }
+            ServerHttpRequest request = exchange.getRequest();
+            InetSocketAddress remoteAddress = request.getRemoteAddress();
+            String happening = String.format("request %s, uri %s, remote %s, JWT token is unsigned",
+                    request.getId(), request.getURI(), remoteAddress);
+            Logger.warn(getClass(), LogBuilder.generate(FilterConst.JWT_FILTER, happening));
 
             return unAuthorizedResponse(exchange.getResponse());
         }
@@ -128,7 +135,7 @@ public abstract class AbstractJwtAuthGatewayFilter extends BaseAuthGatewayFilter
             InetSocketAddress remoteAddress = request.getRemoteAddress();
             String happening = String.format("request %s, uri %s, remote %s, JWT token can not obtain audience",
                     request.getId(), request.getURI(), remoteAddress);
-            log.error(LogBuilder.generate(FilterConst.JWT_FILTER, happening, e.getMessage()), e);
+            Logger.error(getClass(), LogBuilder.generate(FilterConst.JWT_FILTER, happening, e.getMessage()), e);
         }
 
         if (StringUtils.isEmpty(audience)) {
@@ -146,7 +153,7 @@ public abstract class AbstractJwtAuthGatewayFilter extends BaseAuthGatewayFilter
             InetSocketAddress remoteAddress = request.getRemoteAddress();
             String happening = String.format("request %s, uri %s, remote %s, authorization success handler execution failed",
                     request.getId(), request.getURI(), remoteAddress);
-            log.error(LogBuilder.generate(FilterConst.JWT_FILTER, happening, e.getMessage()), e);
+            Logger.error(getClass(), LogBuilder.generate(FilterConst.JWT_FILTER, happening, e.getMessage()), e);
         }
 
         return chain.filter(mutatedExchange)

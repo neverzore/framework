@@ -16,25 +16,58 @@
 
 package tech.neverzore.common.gateway.filter.support;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author zhouzb
  * @date 2019/6/10
  */
-@Getter
-@Setter
-@AllArgsConstructor
 public class RequestSignature {
     private String appId;
     private String noncestr;
     private String timestamp;
     private String signature;
 
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    public String getNoncestr() {
+        return noncestr;
+    }
+
+    public void setNoncestr(String noncestr) {
+        this.noncestr = noncestr;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
+
     public boolean incomplete() {
         return StringUtils.isAnyEmpty(appId, noncestr, timestamp, signature);
+    }
+
+    public RequestSignature(String appId, String noncestr, String timestamp, String signature) {
+        this.appId = appId;
+        this.noncestr = noncestr;
+        this.timestamp = timestamp;
+        this.signature = signature;
     }
 }

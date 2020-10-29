@@ -16,8 +16,6 @@
 
 package tech.neverzore.common.util.threadfactory;
 
-import lombok.AllArgsConstructor;
-
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 

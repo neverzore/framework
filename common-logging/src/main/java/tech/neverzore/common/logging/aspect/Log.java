@@ -14,26 +14,23 @@
  * limitations under the License.
  */
 
-package tech.neverzore.common.util.threadfactory;
+package tech.neverzore.common.logging.aspect;
 
-import tech.neverzore.common.logging.core.LogBuilder;
-import tech.neverzore.common.logging.core.Logger;
+import tech.neverzore.common.logging.core.LogType;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author: zhouzb
- * @date: 2019/12/18
+ * @date: 2020/10/28
  */
-public class DefaultThreadExceptionHandler implements Thread.UncaughtExceptionHandler {
-    private String app;
 
-    public DefaultThreadExceptionHandler(String app) {
-        this.app = app;
-    }
-
-    @Override
-    public void uncaughtException(Thread t, Throwable e) {
-        String happening = String.format("thread %s, error %s", t.getName(), e.getMessage());
-        String content = LogBuilder.generate(app, happening);
-        Logger.error(getClass(), content, e);
-    }
+@Target({ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Log {
+    LogType type() default LogType.NORMAL;
+    String value() default "";
 }

@@ -21,12 +21,12 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SignatureException;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
 import tech.neverzore.common.gateway.filter.base.AbstractJwtAuthGatewayFilter;
 import tech.neverzore.common.gateway.filter.support.FilterOrder;
 import tech.neverzore.common.logging.core.LogBuilder;
+import tech.neverzore.common.logging.core.Logger;
 import tech.neverzore.common.security.jwt.support.JwtManager;
 
 import java.util.Objects;
@@ -35,7 +35,6 @@ import java.util.Objects;
  * @author zhouzb
  * @date 2019/5/27
  */
-@Slf4j
 public class JwtAuthGatewayFilter extends AbstractJwtAuthGatewayFilter {
 
     private JwtManager jwtManager;
@@ -55,22 +54,22 @@ public class JwtAuthGatewayFilter extends AbstractJwtAuthGatewayFilter {
             claims = jwtManager.decode(authToken);
         } catch (ExpiredJwtException e) {
             String content = LogBuilder.generate(JwtAuthGatewayFilter.class.getCanonicalName(), e.getMessage());
-            log.error(content, e);
+            Logger.error(getClass(), content, e);
         } catch (UnsupportedJwtException e) {
             String content = LogBuilder.generate(JwtAuthGatewayFilter.class.getCanonicalName(), e.getMessage());
-            log.error(content, e);
+            Logger.error(getClass(), content, e);
         } catch (MalformedJwtException e) {
             String content = LogBuilder.generate(JwtAuthGatewayFilter.class.getCanonicalName(), e.getMessage());
-            log.error(content, e);
+            Logger.error(getClass(), content, e);
         } catch (SignatureException e) {
             String content = LogBuilder.generate(JwtAuthGatewayFilter.class.getCanonicalName(), e.getMessage());
-            log.error(content, e);
+            Logger.error(getClass(), content, e);
         } catch (IllegalArgumentException e) {
             String content = LogBuilder.generate(JwtAuthGatewayFilter.class.getCanonicalName(), e.getMessage());
-            log.error(content, e);
+            Logger.error(getClass(), content, e);
         } catch (Throwable t) {
             String content = LogBuilder.generate(JwtAuthGatewayFilter.class.getCanonicalName(), t.getMessage());
-            log.error(content, t);
+            Logger.error(getClass(), content, t);
         }
 
         return claims;

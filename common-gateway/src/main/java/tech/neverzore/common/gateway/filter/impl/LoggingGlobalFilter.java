@@ -16,7 +16,6 @@
 
 package tech.neverzore.common.gateway.filter.impl;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -27,30 +26,25 @@ import tech.neverzore.common.gateway.filter.base.BaseGlobalFilter;
 import tech.neverzore.common.gateway.filter.support.FilterOrder;
 import tech.neverzore.common.logging.core.LogBuilder;
 import tech.neverzore.common.logging.core.LogContent;
+import tech.neverzore.common.logging.core.Logger;
 
 /**
  * @author zhouzb
  * @date 2019/5/23
  */
-@Slf4j
 public class LoggingGlobalFilter extends BaseGlobalFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        if (log.isInfoEnabled()) {
-            ServerHttpRequest request = exchange.getRequest();
-            String path = request.getPath().pathWithinApplication().value();
-            String scheme = request.getURI().getScheme();
-            HttpMethod method = request.getMethod();
-            HttpHeaders headers = request.getHeaders();
+        ServerHttpRequest request = exchange.getRequest();
+        String path = request.getPath().pathWithinApplication().value();
+        String scheme = request.getURI().getScheme();
+        HttpMethod method = request.getMethod();
+        HttpHeaders headers = request.getHeaders();
 
-            String happening = String.format("request %s, uri %s, path %s, scheme %s, headers %s, remote %s7",
-                    request.getId(), String.valueOf(request.getURI()), path, scheme, method, headers, request.getRemoteAddress());
+        String happening = String.format("request %s, uri %s, path %s, scheme %s, headers %s, remote %s7",
+                request.getId(), String.valueOf(request.getURI()), path, scheme, method, headers, request.getRemoteAddress());
 
-            LogContent content = LogBuilder.builder()
-                    .setHappening(happening).build();
-
-            log.info(content.toString());
-        }
+        Logger.info(getClass(), LogBuilder.generate("GlobalLoggingFilter", happening));
 
         return chain.filter(exchange);
     }

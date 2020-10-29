@@ -16,17 +16,12 @@
 
 package tech.neverzore.common.domain.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import java.time.LocalDateTime;
 
 /**
  * @author: zhouzb
  * @date: 2019/12/19
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
 public abstract class TraceableModel extends BaseModel {
     public static Integer DELETED = 1;
     public static Integer UN_DELETED = 0;
@@ -39,4 +34,44 @@ public abstract class TraceableModel extends BaseModel {
     private LocalDateTime cdt;
     private LocalDateTime udt;
     private Integer del;
+
+    public Long getCid() {
+        return cid;
+    }
+
+    public void setCid(Long cid) {
+        this.cid = cid;
+    }
+
+    public Long getUid() {
+        return uid;
+    }
+
+    public void setUid(Long uid) {
+        this.uid = uid;
+    }
+
+    public LocalDateTime getCdt() {
+        return cdt;
+    }
+
+    public void setCdt(LocalDateTime cdt) {
+        this.cdt = cdt;
+    }
+
+    public LocalDateTime getUdt() {
+        return udt;
+    }
+
+    public void setUdt(LocalDateTime udt) {
+        this.udt = udt;
+    }
+
+    public Integer getDel() {
+        return del;
+    }
+
+    public void setDel(Integer del) {
+        this.del = del;
+    }
 }

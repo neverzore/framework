@@ -18,7 +18,6 @@ package tech.neverzore.common.util.response;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -27,7 +26,6 @@ import java.io.Serializable;
  * @author: zhouzb
  * @date: 2019/7/19
  */
-@Data
 public final class Response<E> implements Serializable {
 
     private static final long serialVersionUID = 2081864398765097311L;

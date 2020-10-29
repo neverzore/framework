@@ -16,8 +16,6 @@
 
 package tech.neverzore.common.gateway.filter.base;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.core.Ordered;
@@ -28,10 +26,16 @@ import reactor.core.publisher.Mono;
  * @author zhouzb
  * @date 2019/3/23
  */
-@Getter
-@Setter
 public abstract class BaseGatewayFilter implements GatewayFilter, Ordered {
     private boolean enabled = true;
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
     /**
      * 具体拦截方法

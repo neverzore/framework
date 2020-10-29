@@ -16,8 +16,6 @@
 
 package tech.neverzore.common.gateway.filter.factory;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import tech.neverzore.common.gateway.filter.base.AbstractSignatureVerifyGatewayFilter;
@@ -46,9 +44,15 @@ public class SignatureVerifyGatewayFilterFactory extends AbstractGatewayFilterFa
         return this.signatureFilter;
     }
 
-    @Getter
-    @Setter
     public static class Config {
         private boolean enabled;
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
     }
 }
