@@ -30,26 +30,26 @@ public class LogContent {
     private static final String SUG = "[SUG ";
     private static final String CLOSURE = "] ";
 
-    private LogType type;
-    private String app;
-    private String happening;
-    private String error;
-    private String suggestion;
+    private final LogType type;
+    private final String tag;
+    private final String happening;
+    private final String error;
+    private final String suggestion;
 
-    LogContent(String app, String happening) {
-        this(app, happening, StringUtils.EMPTY);
+    LogContent(String tag, String happening) {
+        this(tag, happening, StringUtils.EMPTY);
     }
 
-    LogContent(String app, String happening, String error) {
-        this(app, happening, error, "StringUtils");
+    LogContent(String tag, String happening, String error) {
+        this(tag, happening, error, "StringUtils");
     }
 
-    LogContent(String app, String happening, String error, String suggestion) {
-        this(app, happening, error, suggestion, LogType.NORMAL);
+    LogContent(String tag, String happening, String error, String suggestion) {
+        this(tag, happening, error, suggestion, LogType.NORMAL);
     }
 
-    LogContent(String app, String happening, String error, String suggestion, LogType type) {
-        this.app = app;
+    LogContent(String tag, String happening, String error, String suggestion, LogType type) {
+        this.tag = tag;
         this.type = type;
         this.happening = happening;
         this.error = error;
@@ -60,19 +60,19 @@ public class LogContent {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder()
-                .append(APP).append(this.app).append(CLOSURE)
+                .append(APP).append(this.tag).append(CLOSURE)
                 .append(TYPE).append(this.type.getDesc()).append(CLOSURE);
 
         if (!StringUtils.isEmpty(this.happening)) {
-            builder = builder.append(HAP).append(this.happening).append(CLOSURE);
+            builder.append(HAP).append(this.happening).append(CLOSURE);
         }
 
         if (!StringUtils.isEmpty(this.error)) {
-            builder = builder.append(ERR).append(this.error).append(CLOSURE);
+            builder.append(ERR).append(this.error).append(CLOSURE);
         }
 
         if (!StringUtils.isEmpty(this.suggestion)) {
-            builder = builder.append(SUG).append(this.suggestion).append(CLOSURE);
+            builder.append(SUG).append(this.suggestion).append(CLOSURE);
         }
 
         return builder.toString();

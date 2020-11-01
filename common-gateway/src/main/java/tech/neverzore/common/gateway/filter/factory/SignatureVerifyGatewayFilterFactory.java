@@ -28,7 +28,7 @@ import tech.neverzore.common.gateway.filter.base.AbstractSignatureVerifyGatewayF
  */
 public class SignatureVerifyGatewayFilterFactory extends AbstractGatewayFilterFactory<SignatureVerifyGatewayFilterFactory.Config> {
 
-    private AbstractSignatureVerifyGatewayFilter signatureFilter;
+    private final AbstractSignatureVerifyGatewayFilter signatureFilter;
 
     public SignatureVerifyGatewayFilterFactory(AbstractSignatureVerifyGatewayFilter filter) {
         super(Config.class);

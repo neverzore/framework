@@ -24,6 +24,7 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import tech.neverzore.common.logging.aspect.support.Log;
 import tech.neverzore.common.logging.core.LogBuilder;
 import tech.neverzore.common.logging.core.LogType;
 import tech.neverzore.common.logging.core.Logger;
@@ -34,7 +35,7 @@ import tech.neverzore.common.logging.core.Logger;
  */
 @Aspect
 public class LogAspect {
-    @Pointcut("@annotation(tech.neverzore.common.logging.aspect.Log)")
+    @Pointcut("@annotation(tech.neverzore.common.logging.aspect.support.Log)")
     public void execute() {
 
     }
@@ -53,7 +54,7 @@ public class LogAspect {
 
         if (type.equals(LogType.MONITOR)) {
             String name = joinPoint.getSignature().getName();
-            happening = String.format("Method %s, Parameter %s, Cost %s", name, JSON.toJSONString(joinPoint.getArgs()), cost);
+            happening = String.format("method %s, parameter %s, time cost %sms", name, JSON.toJSONString(joinPoint.getArgs()), cost);
         }
 
         Logger.info(declaringType, LogBuilder.generate(log.value(), happening));
@@ -67,7 +68,7 @@ public class LogAspect {
 
         Class<?> declaringType = joinPoint.getSignature().getDeclaringType();
         String name = joinPoint.getSignature().getName();
-        String happening = String.format("Method %s, Parameter %s executed failed", name, JSON.toJSONString(joinPoint.getArgs()));
+        String happening = String.format("method %s execute failed", name);
 
         Logger.error(declaringType,
                 LogBuilder.generate(log.value(), happening, t.getMessage(), "", type),

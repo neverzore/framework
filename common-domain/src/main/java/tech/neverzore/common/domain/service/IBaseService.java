@@ -26,14 +26,19 @@ import java.util.Collection;
  */
 public interface IBaseService<E, T> {
     /**
-     * 实体对象
+     * 生成领域对象
      *
-     * @return
+     * @return  领域对象
      */
     default E entityInstance() {
         throw new IllegalAccessError("please implement this method in subclass");
     }
 
+    /**
+     * 生成领域对象
+     * @param id    主键
+     * @return  领域对象
+     */
     default E entityInstance(T id) {
         throw new IllegalAccessError("please implement this method in subclass");
     }
@@ -42,7 +47,7 @@ public interface IBaseService<E, T> {
      * 通过主键获取对象
      *
      * @param id 主键
-     * @return
+     * @return  对象响应
      */
     Response<E> get(T id);
 
@@ -50,7 +55,7 @@ public interface IBaseService<E, T> {
      * 通过主键集合获取对象集合
      *
      * @param ids 主键集合
-     * @return
+     * @return  对象集合响应
      */
     Response<Collection<E>> get(Collection<T> ids);
 
@@ -58,7 +63,7 @@ public interface IBaseService<E, T> {
      * 插入对象
      *
      * @param entity 实体对象
-     * @return
+     * @return  插入对象响应
      */
     Response<E> insert(E entity);
 
@@ -66,7 +71,7 @@ public interface IBaseService<E, T> {
      * 批量插入对象
      *
      * @param entities 对象集合
-     * @return
+     * @return  批量插入对象响应
      */
     Response<Collection<E>> insert(Collection<E> entities);
 
@@ -74,7 +79,7 @@ public interface IBaseService<E, T> {
      * 更新对象
      *
      * @param entity 实体对象
-     * @return
+     * @return  更新对象响应
      */
     Response<E> update(E entity);
 
@@ -82,7 +87,7 @@ public interface IBaseService<E, T> {
      * 更新对象集合
      *
      * @param entities 对象集合
-     * @return
+     * @return  更新对象集合响应
      */
     Response<Collection<E>> update(Collection<E> entities);
 
@@ -90,7 +95,7 @@ public interface IBaseService<E, T> {
      * 删除对象
      *
      * @param id 对象主键
-     * @return
+     * @return  删除对象响应
      */
     Response<Void> delete(T id);
 
@@ -98,14 +103,14 @@ public interface IBaseService<E, T> {
      * 删除对象集合
      *
      * @param ids 对象主键集合
-     * @return
+     * @return  删除对象集合响应
      */
     Response<Void> delete(Collection<T> ids);
 
     /**
      * 获取对象列表
      *
-     * @return
+     * @return  对象列表响应
      */
     Response<Collection<E>> list();
 }

@@ -32,29 +32,70 @@ import java.util.Collection;
  */
 public abstract class BaseServiceImpl<E extends BaseModel, I extends Serializable> implements IBaseService<E, I> {
 
+    /**
+     * 通过主键获取对象
+     * @param id    主键
+     * @return  对象
+     */
     protected abstract E getById(I id);
 
+    /**
+     * 通过主键集获取对象集
+     * @param ids   主键集
+     * @return  对象集
+     */
     protected abstract Collection<E> listByIds(Collection<I> ids);
 
+    /**
+     * 保存领域对象
+     * @param entity    领域对象
+     * @return  保存结果
+     */
     protected abstract boolean save(E entity);
 
+    /**
+     * 批量保存领域对象
+     * @param entities  领域对象集
+     * @return  保存结果
+     */
     protected abstract boolean saveBatch(Collection<E> entities);
 
+    /**
+     * 通过主键更新领域对象
+     * @param entity    领域对象
+     * @return  更新结果
+     */
     protected abstract boolean updateById(E entity);
 
+    /**
+     * 批量更新领域对象
+     * @param entities  领域对象集
+     * @return  更新结果
+     */
     protected abstract boolean updateBatchById(Collection<E> entities);
 
+
+    /**
+     * 通过主键删除对象
+     * @param id    主键
+     * @return  删除结果
+     */
     protected abstract boolean removeById(I id);
 
+    /**
+     * 通过主键集删除领域对象集
+     * @param ids   主键集
+     * @return  删除结果
+     */
     protected abstract boolean removeByIds(Collection<I> ids);
 
     @Override
     public abstract Response<Collection<E>> list();
 
     /**
-     * 获取当前实体对象Class
+     * 获取当前领域对象Class
      *
-     * @return
+     * @return  当前领域对象类型
      */
     public Class<E> currentModelClass() {
         return (Class<E>) ReflectionUtil.getSuperClassGenericType(this.getClass(), 0);

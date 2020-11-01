@@ -32,15 +32,23 @@ public interface LevelData {
      */
     Comparable<?> getSelf();
 
+    /**
+     * 获取父级标识符
+     * @return  父级标识
+     */
     Comparable<?> getParent();
 
+    /**
+     * 获取子集
+     * @return  子集
+     */
     List<LevelData> getChildren();
 
+    /**
+     * 判断是否存在祖先
+     * @return  是否存在祖先
+     */
     default boolean notExistsAncestor() {
-        if (this.getParent() == null) {
-            return true;
-        }
-
-        return false;
+        return this.getParent() == null;
     }
 }

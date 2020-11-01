@@ -42,9 +42,9 @@ import java.util.Base64;
  * @date 2020/6/19
  */
 public abstract class ServiceAccessVerifyFilter extends OncePerRequestFilter {
-    private RSA rsa;
-    private Charset charset;
-    private RequestMatcher requestMatcher;
+    private final RSA rsa;
+    private final Charset charset;
+    private final RequestMatcher requestMatcher;
 
     public ServiceAccessVerifyFilter(String pattern, String publicKey) {
         this(pattern, publicKey, StandardCharsets.UTF_8);
@@ -101,29 +101,21 @@ public abstract class ServiceAccessVerifyFilter extends OncePerRequestFilter {
 
         String computedTag = new String(decrypt, this.charset);
 
-        if (!accessVerifyTag.equals(computedTag)) {
-            return false;
-        }
-
-        return true;
+        return accessVerifyTag.equals(computedTag);
     }
 
-
-
     protected void accessVerifySuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws IOException, ServletException {
-//        String accessVerifyTag = httpServletRequest.getHeader(ServiceAccessConst.SERVICE_ACCESS_VERIFY_TAG);
-//        String accessPrincipal = httpServletRequest.getHeader(ServiceAccessConst.SERVICE_ACCESS_VERIFY_PRINCIPLE);
 
         accessVerifySuccessHandler(httpServletRequest, httpServletResponse, filterChain);
 
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 
+    /**
+     * 访问校验成功回调
+     * @param httpServletRequest    请求
+     * @param httpServletResponse   响应
+     * @param filterChain   过滤链
+     */
     protected abstract void accessVerifySuccessHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain);
-//    {
-//        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_ANONYMOUS");
-//        List<GrantedAuthority> authorities = Collections.singletonList(authority);
-//
-//        SecurityContextHolder.getContext().setAuthentication(new AnonymousAuthenticationToken(accessVerifyTag, accessPrincipal, authorities));
-//    }
 }

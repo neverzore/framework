@@ -39,9 +39,6 @@ import org.springframework.util.*;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import tech.neverzore.common.logging.core.Logger;
-import tech.neverzore.common.util.lang.Character;
-import tech.neverzore.common.util.reflect.ReflectionUtil;
 import tech.neverzore.common.gateway.filter.support.FilterConst;
 import tech.neverzore.common.gateway.filter.support.FilterOrder;
 import tech.neverzore.common.gateway.filter.support.RequestPartHashPair;
@@ -49,6 +46,8 @@ import tech.neverzore.common.gateway.filter.support.RequestSignature;
 import tech.neverzore.common.logging.core.LogBuilder;
 import tech.neverzore.common.logging.core.LogContent;
 import tech.neverzore.common.logging.core.LogType;
+import tech.neverzore.common.logging.core.Logger;
+import tech.neverzore.common.util.lang.Character;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -76,7 +75,7 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
     private static final String TIMESTAMP = "timestamp";
     private static final String CONTENT = "content";
 
-    private int multiPartReaderMaxInMemorySize = -1;
+    private int multiPartReaderMaxInMemorySize;
 
     public AbstractSignatureVerifyGatewayFilter(int multiPartReaderMaxInMemorySize) {
         this.multiPartReaderMaxInMemorySize = multiPartReaderMaxInMemorySize;
@@ -122,7 +121,7 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
     }
 
     private ServerHttpRequest generateMutateRequest(ServerHttpRequest request, byte[] content) {
-        ServerHttpRequest mutatedRequest = new ServerHttpRequestDecorator(request) {
+        return new ServerHttpRequestDecorator(request) {
             @Override
             public Flux<DataBuffer> getBody() {
                 if (content != null && content.length > 0) {
@@ -132,8 +131,6 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
                 }
             }
         };
-
-        return mutatedRequest;
     }
 
     private ServerWebExchange generateMutateExchange(ServerWebExchange exchange, byte[] content) {
@@ -323,7 +320,7 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
             String happening = String.format("request %s, uri %s, remote %s, RequestSignature parameters incomplete",
                     request.getId(), String.valueOf(request.getURI()), request.getRemoteAddress());
             LogContent content = LogBuilder.builder()
-                    .setSource(FilterConst.SIGNATURE_FILTER)
+                    .setTag(FilterConst.SIGNATURE_FILTER)
                     .setHappening(happening)
                     .build();
             Logger.warn(getClass(), content.toString());
@@ -373,7 +370,7 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
 
         String happening = String.format("requestSignature content %s, requestSignature original %s, requestSignature hash %s", concatContent, rSignature, cSignature);
         LogContent logContent = LogBuilder.builder()
-                .setSource(FilterConst.SIGNATURE_FILTER)
+                .setTag(FilterConst.SIGNATURE_FILTER)
                 .setHappening(happening)
                 .setType(LogType.MONITOR)
                 .build();
@@ -385,7 +382,7 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
             happening = String.format("request %s, uri %s, remote %s, requestSignature verified failed due to requestSignature mismatch.",
                     request.getId(), String.valueOf(request.getURI()), request.getRemoteAddress());
             logContent = LogBuilder.builder()
-                    .setSource(FilterConst.SIGNATURE_FILTER)
+                    .setTag(FilterConst.SIGNATURE_FILTER)
                     .setHappening(happening)
                     .build();
             Logger.warn(getClass(), logContent.toString());

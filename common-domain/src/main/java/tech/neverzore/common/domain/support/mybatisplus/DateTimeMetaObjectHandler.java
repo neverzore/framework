@@ -22,9 +22,13 @@ import tech.neverzore.common.domain.model.TraceableModel;
 
 import java.time.LocalDateTime;
 
+/**
+ * @author: zhouzb
+ * @date: 2020/9/2
+ */
 public class DateTimeMetaObjectHandler implements MetaObjectHandler {
-    private String cdt;
-    private String udt;
+    private final String cdt;
+    private final String udt;
 
     public DateTimeMetaObjectHandler() {
         this("cdt", "udt");
@@ -38,14 +42,14 @@ public class DateTimeMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         if (metaObject.getOriginalObject() instanceof TraceableModel) {
-            this.strictUpdateFill(metaObject, this.cdt, () -> LocalDateTime.now(), LocalDateTime.class);
+            this.strictUpdateFill(metaObject, this.cdt, LocalDateTime::now, LocalDateTime.class);
         }
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
         if (metaObject.getOriginalObject() instanceof TraceableModel) {
-            this.strictUpdateFill(metaObject, this.udt, () -> LocalDateTime.now(), LocalDateTime.class);
+            this.strictUpdateFill(metaObject, this.udt, LocalDateTime::now, LocalDateTime.class);
         }
     }
 }

@@ -33,8 +33,8 @@ public class TreeUtil {
      * 当前build实现，子节点排序默认采用TreeMap基于Key来排序
      * 时间 o(n) 空间 o(n)
      *
-     * @param source
-     * @return
+     * @param source    数据集
+     * @return  树形结果集
      */
     public static List<LevelData> build(Collection<? extends LevelData> source) {
         if (CollectionUtils.isEmpty(source)) {
@@ -55,17 +55,15 @@ public class TreeUtil {
             }
 
             Comparable<?> parentId = data.getParent();
-            if (((LevelData) data).notExistsAncestor()) {
+            if (data.notExistsAncestor()) {
                 parent.putIfAbsent(selfId, data);
                 return;
             }
 
-            if (origin.containsKey(parentId)) {
-                origin.get(parentId).putIfAbsent(selfId, data);
-            } else {
+            if (!origin.containsKey(parentId)) {
                 origin.putIfAbsent(parentId, new ConcurrentHashMap<>());
-                origin.get(parentId).putIfAbsent(selfId, data);
             }
+            origin.get(parentId).putIfAbsent(selfId, data);
         });
 
         List<LevelData> levelData = new ArrayList<>(parent.size());
@@ -74,8 +72,7 @@ public class TreeUtil {
         TreeMap<Comparable<?>, LevelData> tree = new TreeMap<>(parent);
 
         // 此处不用并行是防止乱序
-        tree.entrySet().stream().forEach(entry -> {
-            LevelData iLevelData = entry.getValue();
+        tree.forEach((key, iLevelData) -> {
 
             levelData.add(iLevelData);
 
@@ -92,9 +89,9 @@ public class TreeUtil {
             Map<Comparable<?>, LevelData> subTree = origin.get(self);
 
             if (subTree != null && !subTree.isEmpty()) {
-                new TreeMap<Comparable<?>, LevelData>(subTree).entrySet().stream().forEach(sub -> {
-                    node.getChildren().add(sub.getValue());
-                    buildSubtree(sub.getValue(), origin);
+                new TreeMap<>(subTree).forEach((key, value) -> {
+                    node.getChildren().add(value);
+                    buildSubtree(value, origin);
                 });
             }
         }

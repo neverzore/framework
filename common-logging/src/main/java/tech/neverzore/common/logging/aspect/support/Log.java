@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package tech.neverzore.common.logging.aspect;
+package tech.neverzore.common.logging.aspect.support;
 
 import tech.neverzore.common.logging.core.LogType;
 

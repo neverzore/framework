@@ -33,21 +33,21 @@ public enum AuthTokenSource {
      */
     QUERY("QUERY");
 
-    private String value;
+    private final String value;
 
     AuthTokenSource(String value) {
         this.value = value;
     }
 
-    private static final Map<String, AuthTokenSource> map = new HashMap<>();
+    private static final Map<String, AuthTokenSource> MAP = new HashMap<>();
 
     static {
         for (AuthTokenSource source : AuthTokenSource.values()) {
-            map.put(source.value, source);
+            MAP.put(source.value, source);
         }
     }
 
     public static AuthTokenSource getSourceByValue(String value) {
-        return map.get(value);
+        return MAP.get(value);
     }
 }

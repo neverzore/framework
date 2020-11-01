@@ -24,17 +24,17 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class LogBuilder {
     private LogType type;
-    private String source;
+    private String tag;
     private String happening;
     private String error;
     private String suggestion;
 
-    public String getSource() {
-        return source;
+    public String getTag() {
+        return tag;
     }
 
-    public LogBuilder setSource(String source) {
-        this.source = source;
+    public LogBuilder setTag(String tag) {
+        this.tag = tag;
         return this;
     }
 
@@ -75,7 +75,7 @@ public class LogBuilder {
     }
 
     private LogBuilder() {
-        this.source = StringUtils.EMPTY;
+        this.tag = StringUtils.EMPTY;
         this.type = LogType.NORMAL;
     }
 
@@ -84,22 +84,26 @@ public class LogBuilder {
     }
 
     public LogContent build() {
-        return new LogContent(this.source, this.happening, this.error, this.suggestion, this.type);
+        return new LogContent(this.tag, this.happening, this.error, this.suggestion, this.type);
     }
 
-    public static String generate(String app, String happening) {
-        return generate(app, happening, StringUtils.EMPTY);
+    public static String generate(String happening) {
+        return generate(StringUtils.EMPTY, happening);
     }
 
-    public static String generate(String app, String happening, String error) {
-        return generate(app, happening, error, StringUtils.EMPTY);
+    public static String generate(String tag, String happening) {
+        return generate(tag, happening, StringUtils.EMPTY);
     }
 
-    public static String generate(String app, String happening, String error, String suggestion) {
-        return generate(app, happening, error, suggestion, LogType.NORMAL);
+    public static String generate(String tag, String happening, String error) {
+        return generate(tag, happening, error, StringUtils.EMPTY);
     }
 
-    public static String generate(String app, String happening, String error, String suggestion, LogType logType) {
-        return LogBuilder.builder().setSource(app).setType(logType).setHappening(happening).setError(error).setSuggestion(suggestion).build().toString();
+    public static String generate(String tag, String happening, String error, String suggestion) {
+        return generate(tag, happening, error, suggestion, LogType.NORMAL);
+    }
+
+    public static String generate(String tag, String happening, String error, String suggestion, LogType logType) {
+        return LogBuilder.builder().setTag(tag).setType(logType).setHappening(happening).setError(error).setSuggestion(suggestion).build().toString();
     }
 }
