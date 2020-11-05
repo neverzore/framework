@@ -14,26 +14,24 @@
  * limitations under the License.
  */
 
-package tech.neverzore.common.util.threadfactory;
-
-import tech.neverzore.common.logging.core.LogBuilder;
-import tech.neverzore.common.logging.Logger;
+package tech.neverzore.common.logging.core;
 
 /**
  * @author: zhouzb
- * @date: 2019/12/18
+ * @date: 2020/11/6
  */
-public class DefaultThreadExceptionHandler implements Thread.UncaughtExceptionHandler {
-    private String app;
+public class LogHolder {
+    private static final ThreadLocal<String> LOGGER_NAME = new ThreadLocal<>();
 
-    public DefaultThreadExceptionHandler(String app) {
-        this.app = app;
+    public static void currentLogger(String name) {
+        LOGGER_NAME.set(name);
     }
 
-    @Override
-    public void uncaughtException(Thread t, Throwable e) {
-        String happening = String.format("thread %s, error %s", t.getName(), e.getMessage());
-        String content = LogBuilder.generate(app, happening);
-        Logger.error(getClass(), content, e);
+    public static String currentLogger() {
+        return LOGGER_NAME.get();
+    }
+
+    public static void reset() {
+        LOGGER_NAME.remove();
     }
 }

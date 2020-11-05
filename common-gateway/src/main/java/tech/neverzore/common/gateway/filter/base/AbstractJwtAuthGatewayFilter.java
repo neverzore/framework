@@ -25,7 +25,7 @@ import reactor.core.publisher.Mono;
 import tech.neverzore.common.gateway.filter.support.AuthTokenSource;
 import tech.neverzore.common.gateway.filter.support.FilterConst;
 import tech.neverzore.common.logging.core.LogBuilder;
-import tech.neverzore.common.logging.core.Logger;
+import tech.neverzore.common.logging.Logger;
 import tech.neverzore.common.security.filter.support.ServiceAccessConst;
 
 import java.net.InetSocketAddress;

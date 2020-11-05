@@ -25,8 +25,7 @@ import reactor.core.publisher.Mono;
 import tech.neverzore.common.gateway.filter.base.BaseGlobalFilter;
 import tech.neverzore.common.gateway.filter.support.FilterOrder;
 import tech.neverzore.common.logging.core.LogBuilder;
-import tech.neverzore.common.logging.core.LogContent;
-import tech.neverzore.common.logging.core.Logger;
+import tech.neverzore.common.logging.Logger;
 
 /**
  * @author zhouzb

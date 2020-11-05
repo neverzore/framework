@@ -46,7 +46,7 @@ import tech.neverzore.common.gateway.filter.support.RequestSignature;
 import tech.neverzore.common.logging.core.LogBuilder;
 import tech.neverzore.common.logging.core.LogContent;
 import tech.neverzore.common.logging.core.LogType;
-import tech.neverzore.common.logging.core.Logger;
+import tech.neverzore.common.logging.Logger;
 import tech.neverzore.common.util.lang.Character;
 
 import java.io.ByteArrayInputStream;

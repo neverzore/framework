@@ -26,7 +26,7 @@ import org.springframework.util.Assert;
 import tech.neverzore.common.gateway.filter.base.AbstractJwtAuthGatewayFilter;
 import tech.neverzore.common.gateway.filter.support.FilterOrder;
 import tech.neverzore.common.logging.core.LogBuilder;
-import tech.neverzore.common.logging.core.Logger;
+import tech.neverzore.common.logging.Logger;
 import tech.neverzore.common.security.jwt.support.JwtManager;
 
 import java.util.Objects;

@@ -31,6 +31,21 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Log {
+    /**
+     * 日志类型
+     * @return  LogType
+     */
     LogType type() default LogType.MONITOR;
+
+    /**
+     * Logger名称
+     * @return  name
+     */
     String value() default "";
+
+    /**
+     * 日志标识
+     * @return  tag
+     */
+    String tag() default "";
 }

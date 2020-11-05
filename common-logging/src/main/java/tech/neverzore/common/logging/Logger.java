@@ -14,22 +14,35 @@
  * limitations under the License.
  */
 
-package tech.neverzore.common.logging.core;
+package tech.neverzore.common.logging;
 
 import org.slf4j.LoggerFactory;
+import tech.neverzore.common.logging.aspect.LogAspect;
+import tech.neverzore.common.logging.core.LogHolder;
+
+import java.util.Objects;
 
 /**
  * @author: zhouzb
  * @date: 2020/10/29
  */
 public class Logger {
+    public static String DEFAULT_LOGGER = "NEVERZORE-DEFAULT";
 
     private static org.slf4j.Logger getLogger(Class<?> caller) {
         if (caller == null) {
-            return LoggerFactory.getLogger("DEFAULT");
+            return LoggerFactory.getLogger(DEFAULT_LOGGER);
         }
 
         return LoggerFactory.getLogger(caller);
+    }
+
+    private static org.slf4j.Logger getLogger(String name) {
+        if (Objects.isNull(name)) {
+            return LoggerFactory.getLogger(DEFAULT_LOGGER);
+        }
+
+        return LoggerFactory.getLogger(name);
     }
 
     public static void debug(Class<?> caller, String message) {
@@ -65,5 +78,21 @@ public class Logger {
         if (logger.isErrorEnabled()) {
             logger.error(message, cause);
         }
+    }
+
+    public static boolean isDebugEnabled() {
+        return getLogger(LogHolder.currentLogger()).isDebugEnabled();
+    }
+
+    public static boolean isInfoEnabled() {
+        return getLogger(LogHolder.currentLogger()).isInfoEnabled();
+    }
+
+    public static boolean isWarnEnabled() {
+        return getLogger(LogHolder.currentLogger()).isWarnEnabled();
+    }
+
+    public static boolean isErrorEnabled() {
+        return getLogger(LogHolder.currentLogger()).isErrorEnabled();
     }
 }

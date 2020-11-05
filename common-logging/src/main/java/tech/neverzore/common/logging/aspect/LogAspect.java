@@ -20,14 +20,12 @@ import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.AfterThrowing;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
+import tech.neverzore.common.logging.Logger;
 import tech.neverzore.common.logging.aspect.support.Log;
 import tech.neverzore.common.logging.core.LogBuilder;
+import tech.neverzore.common.logging.core.LogHolder;
 import tech.neverzore.common.logging.core.LogType;
-import tech.neverzore.common.logging.core.Logger;
 
 /**
  * @author: zhouzb
@@ -41,7 +39,7 @@ public class LogAspect {
     }
 
     @Around(value = "execute() && @annotation(log)")
-    public Object around(ProceedingJoinPoint joinPoint, Log log) throws Throwable {
+    public Object doAround(ProceedingJoinPoint joinPoint, Log log) throws Throwable {
         LogType type = log.type();
 
         long begin = System.currentTimeMillis();
@@ -57,13 +55,13 @@ public class LogAspect {
             happening = String.format("method %s, parameter %s, time cost %sms", name, JSON.toJSONString(joinPoint.getArgs()), cost);
         }
 
-        Logger.info(declaringType, LogBuilder.generate(log.value(), happening));
+        Logger.info(declaringType, LogBuilder.generate(log.tag(), happening));
 
         return retVal;
     }
 
     @AfterThrowing(value = "execute() && @annotation(log)", throwing = "t")
-    public void afterThrowing(JoinPoint joinPoint, Log log, Throwable t) {
+    public void doAfterThrowing(JoinPoint joinPoint, Log log, Throwable t) {
         LogType type = log.type();
 
         Class<?> declaringType = joinPoint.getSignature().getDeclaringType();
@@ -71,8 +69,23 @@ public class LogAspect {
         String happening = String.format("method %s execute failed", name);
 
         Logger.error(declaringType,
-                LogBuilder.generate(log.value(), happening, t.getMessage(), "", type),
+                LogBuilder.generate(log.tag(), happening, t.getMessage(), "", type),
                 t);
     }
 
+    @Before(value = "execute() && @annotation(log)")
+    public void doBefore(JoinPoint joinPoint, Log log) {
+        String loggerName;
+        if (!log.value().isEmpty()) {
+            loggerName = log.value();
+        } else {
+            loggerName = joinPoint.getSignature().getDeclaringTypeName();
+        }
+        LogHolder.currentLogger(loggerName);
+    }
+
+    @Before(value = "execute()")
+    public void doAfter() {
+        LogHolder.reset();
+    }
 }
