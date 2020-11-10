@@ -27,7 +27,7 @@ import java.util.Objects;
  * @date: 2020/10/29
  */
 public class Logger {
-    public static String DEFAULT_LOGGER = "NEVERZORE-DEFAULT";
+    public static String DEFAULT_LOGGER = "NEVERZORE";
 
     private static org.slf4j.Logger getLogger(Class<?> caller) {
         if (caller == null) {
@@ -80,19 +80,49 @@ public class Logger {
         }
     }
 
+    private static void checkBefore() {
+        if (!LogHolder.exists()) {
+            throw new RuntimeException("Current logger is empty, please check whether Log is configured.");
+        }
+    }
+
     public static boolean isDebugEnabled() {
+        checkBefore();
+
         return getLogger(LogHolder.currentLogger()).isDebugEnabled();
     }
 
     public static boolean isInfoEnabled() {
+        checkBefore();
+
         return getLogger(LogHolder.currentLogger()).isInfoEnabled();
     }
 
     public static boolean isWarnEnabled() {
+        checkBefore();
+
         return getLogger(LogHolder.currentLogger()).isWarnEnabled();
     }
 
     public static boolean isErrorEnabled() {
+        checkBefore();
+
         return getLogger(LogHolder.currentLogger()).isErrorEnabled();
+    }
+
+    public static boolean isDebugEnabled(String loggerName) {
+        return getLogger(loggerName).isDebugEnabled();
+    }
+
+    public static boolean isInfoEnabled(String loggerName) {
+        return getLogger(loggerName).isInfoEnabled();
+    }
+
+    public static boolean isWarnEnabled(String loggerName) {
+        return getLogger(loggerName).isWarnEnabled();
+    }
+
+    public static boolean isErrorEnabled(String loggerName) {
+        return getLogger(loggerName).isErrorEnabled();
     }
 }

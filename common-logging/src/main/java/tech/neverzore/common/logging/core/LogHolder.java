@@ -16,6 +16,8 @@
 
 package tech.neverzore.common.logging.core;
 
+import java.util.Objects;
+
 /**
  * @author: zhouzb
  * @date: 2020/11/6
@@ -33,5 +35,9 @@ public class LogHolder {
 
     public static void reset() {
         LOGGER_NAME.remove();
+    }
+
+    public static boolean exists() {
+        return !Objects.isNull(LOGGER_NAME.get());
     }
 }

@@ -84,8 +84,8 @@ public class LogAspect {
         LogHolder.currentLogger(loggerName);
     }
 
-    @Before(value = "execute()")
-    public void doAfter() {
+    @After(value = "execute()")
+    public void doAfter(JoinPoint joinPoint) {
         LogHolder.reset();
     }
 }
