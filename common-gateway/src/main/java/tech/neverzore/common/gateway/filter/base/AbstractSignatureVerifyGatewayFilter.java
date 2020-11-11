@@ -317,13 +317,15 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
 
     private boolean signatureCompletionVerify(ServerHttpRequest request, RequestSignature requestSignature) {
         if (requestSignature.incomplete()) {
-            String happening = String.format("request %s, uri %s, remote %s, RequestSignature parameters incomplete",
-                    request.getId(), String.valueOf(request.getURI()), request.getRemoteAddress());
-            LogContent content = LogBuilder.builder()
-                    .setTag(FilterConst.SIGNATURE_FILTER)
-                    .setHappening(happening)
-                    .build();
-            Logger.warn(getClass(), content.toString());
+            if (Logger.isWarnEnabled(getClass())) {
+                String happening = String.format("request %s, uri %s, remote %s, RequestSignature parameters incomplete",
+                        request.getId(), String.valueOf(request.getURI()), request.getRemoteAddress());
+                LogContent content = LogBuilder.builder()
+                        .setTag(FilterConst.SIGNATURE_FILTER)
+                        .setHappening(happening)
+                        .build();
+                Logger.warn(getClass(), content.toString());
+            }
 
             return true;
         }
@@ -368,24 +370,28 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
 
         String cSignature = DigestUtils.md5Hex(concatContent.toString());
 
-        String happening = String.format("requestSignature content %s, requestSignature original %s, requestSignature hash %s", concatContent, rSignature, cSignature);
-        LogContent logContent = LogBuilder.builder()
-                .setTag(FilterConst.SIGNATURE_FILTER)
-                .setHappening(happening)
-                .setType(LogType.MONITOR)
-                .build();
-        Logger.debug(getClass(), logContent.toString());
+        if (Logger.isDebugEnabled(getClass())) {
+            String happening = String.format("requestSignature content %s, requestSignature original %s, requestSignature hash %s", concatContent, rSignature, cSignature);
+            LogContent logContent = LogBuilder.builder()
+                    .setTag(FilterConst.SIGNATURE_FILTER)
+                    .setHappening(happening)
+                    .setType(LogType.MONITOR)
+                    .build();
+            Logger.debug(getClass(), logContent.toString());
+        }
 
         boolean matched = rSignature.equalsIgnoreCase(cSignature);
         if (!matched) {
-            ServerHttpRequest request = exchange.getRequest();
-            happening = String.format("request %s, uri %s, remote %s, requestSignature verified failed due to requestSignature mismatch.",
-                    request.getId(), String.valueOf(request.getURI()), request.getRemoteAddress());
-            logContent = LogBuilder.builder()
-                    .setTag(FilterConst.SIGNATURE_FILTER)
-                    .setHappening(happening)
-                    .build();
-            Logger.warn(getClass(), logContent.toString());
+            if (Logger.isWarnEnabled(getClass())) {
+                ServerHttpRequest request = exchange.getRequest();
+                String happening = String.format("request %s, uri %s, remote %s, requestSignature verified failed due to requestSignature mismatch.",
+                        request.getId(), String.valueOf(request.getURI()), request.getRemoteAddress());
+                LogContent logContent = LogBuilder.builder()
+                        .setTag(FilterConst.SIGNATURE_FILTER)
+                        .setHappening(happening)
+                        .build();
+                Logger.warn(getClass(), logContent.toString());
+            }
         }
 
         return matched;
@@ -395,9 +401,11 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
         ServerHttpRequest request = exchange.getRequest();
         MultiValueMap<String, String> queryParams = request.getQueryParams();
         if (Objects.isNull(queryParams) || queryParams.isEmpty()) {
-            String happening = String.format("request %s, uri %s, remote %s, GET request query parameter is empty.",
-                    request.getId(), String.valueOf(request.getURI()), request.getRemoteAddress());
-            Logger.warn(getClass(), LogBuilder.generate(FilterConst.SIGNATURE_FILTER, happening));
+            if (Logger.isWarnEnabled(getClass())) {
+                String happening = String.format("request %s, uri %s, remote %s, GET request query parameter is empty.",
+                        request.getId(), String.valueOf(request.getURI()), request.getRemoteAddress());
+                Logger.warn(getClass(), LogBuilder.generate(FilterConst.SIGNATURE_FILTER, happening));
+            }
 
             return false;
         }
@@ -419,18 +427,22 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
         MediaType contentType = request.getHeaders().getContentType();
 
         if (contentType == null) {
-            String happening = String.format("request %s, uri %s, remote %s, request content-type is null, resolved to TEXT_PLAIN",
-                    request.getId(), String.valueOf(request.getURI()), request.getRemoteAddress());
-            Logger.warn(getClass(), LogBuilder.generate(FilterConst.SIGNATURE_FILTER, happening));
+            if (Logger.isWarnEnabled(getClass())) {
+                String happening = String.format("request %s, uri %s, remote %s, request content-type is null, resolved to TEXT_PLAIN",
+                        request.getId(), String.valueOf(request.getURI()), request.getRemoteAddress());
+                Logger.warn(getClass(), LogBuilder.generate(FilterConst.SIGNATURE_FILTER, happening));
+            }
 
             contentType = MediaType.TEXT_PLAIN;
         }
 
         Charset charset = contentType.getCharset();
         if (charset == null) {
-            String happening = String.format("request %s, uri %s, remote %s, request charset is null, resolved to UTF-8",
-                    request.getId(), String.valueOf(request.getURI()), request.getRemoteAddress());
-            Logger.warn(getClass(), LogBuilder.generate(FilterConst.SIGNATURE_FILTER, happening));
+            if (Logger.isWarnEnabled(getClass())) {
+                String happening = String.format("request %s, uri %s, remote %s, request charset is null, resolved to UTF-8",
+                        request.getId(), String.valueOf(request.getURI()), request.getRemoteAddress());
+                Logger.warn(getClass(), LogBuilder.generate(FilterConst.SIGNATURE_FILTER, happening));
+            }
 
             charset = StandardCharsets.UTF_8;
         }
@@ -441,8 +453,10 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
 
         String body = StreamUtils.copyToString(new ByteArrayInputStream(requestBody), charset);
 
-        LogContent content = LogBuilder.builder().setType(LogType.MONITOR).setHappening(String.format("request body %s", body)).build();
-        Logger.debug(getClass(), content.toString());
+        if (Logger.isDebugEnabled(getClass())) {
+            LogContent content = LogBuilder.builder().setType(LogType.MONITOR).setHappening(String.format("request body %s", body)).build();
+            Logger.debug(getClass(), content.toString());
+        }
 
         if (contentType.isCompatibleWith(MediaType.APPLICATION_JSON)) {
             return signatureVerifyPostJson(exchange, JSON.parseObject(body, new TypeReference<Map<String, Object>>() {

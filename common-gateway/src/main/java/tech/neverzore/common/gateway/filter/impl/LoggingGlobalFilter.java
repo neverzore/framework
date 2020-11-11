@@ -40,10 +40,12 @@ public class LoggingGlobalFilter extends BaseGlobalFilter {
         HttpMethod method = request.getMethod();
         HttpHeaders headers = request.getHeaders();
 
-        String happening = String.format("request %s, uri %s, path %s, scheme %s, headers %s, remote %s7",
-                request.getId(), String.valueOf(request.getURI()), path, scheme, method, headers, request.getRemoteAddress());
+        if (Logger.isInfoEnabled(getClass())) {
+            String happening = String.format("request %s, uri %s, path %s, scheme %s, headers %s, remote %s7",
+                    request.getId(), String.valueOf(request.getURI()), path, scheme, method, headers, request.getRemoteAddress());
 
-        Logger.info(getClass(), LogBuilder.generate("GlobalLoggingFilter", happening));
+            Logger.info(getClass(), LogBuilder.generate("GlobalLoggingFilter", happening));
+        }
 
         return chain.filter(exchange);
     }

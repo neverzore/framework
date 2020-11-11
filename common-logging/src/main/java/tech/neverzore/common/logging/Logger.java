@@ -17,7 +17,6 @@
 package tech.neverzore.common.logging;
 
 import org.slf4j.LoggerFactory;
-import tech.neverzore.common.logging.aspect.LogAspect;
 import tech.neverzore.common.logging.core.LogHolder;
 
 import java.util.Objects;
@@ -46,38 +45,48 @@ public class Logger {
     }
 
     public static void debug(Class<?> caller, String message) {
-        org.slf4j.Logger logger = getLogger(caller);
-        if (logger.isDebugEnabled()) {
-            logger.debug(message);
-        }
+        debug(caller.getSimpleName(), message);
     }
 
     public static void info(Class<?> caller, String message) {
-        org.slf4j.Logger logger = getLogger(caller);
-        if (logger.isInfoEnabled()) {
-            logger.info(message);
-        }
+        info(caller.getSimpleName(), message);
     }
 
     public static void warn(Class<?> caller, String message) {
-        org.slf4j.Logger logger = getLogger(caller);
-        if (logger.isWarnEnabled()) {
-            logger.warn(message);
-        }
+        warn(caller.getSimpleName(), message);
     }
 
     public static void error(Class<?> caller, String message) {
-        org.slf4j.Logger logger = getLogger(caller);
-        if (logger.isErrorEnabled()) {
-            logger.error(message);
-        }
+        error(caller.getSimpleName(), message);
     }
 
     public static void error(Class<?> caller, String message, Throwable cause) {
-        org.slf4j.Logger logger = getLogger(caller);
-        if (logger.isErrorEnabled()) {
-            logger.error(message, cause);
-        }
+        error(caller.getSimpleName(), message, cause);
+    }
+
+    public static void debug(String name, String message) {
+        org.slf4j.Logger logger = getLogger(name);
+        logger.debug(message);
+    }
+
+    public static void info(String name, String message) {
+        org.slf4j.Logger logger = getLogger(name);
+        logger.info(message);
+    }
+
+    public static void warn(String name, String message) {
+        org.slf4j.Logger logger = getLogger(name);
+        logger.warn(message);
+    }
+
+    public static void error(String name, String message) {
+        org.slf4j.Logger logger = getLogger(name);
+        logger.error(message);
+    }
+
+    public static void error(String name, String message, Throwable cause) {
+        org.slf4j.Logger logger = getLogger(name);
+        logger.error(message, cause);
     }
 
     private static void checkBefore() {
@@ -110,19 +119,19 @@ public class Logger {
         return getLogger(LogHolder.currentLogger()).isErrorEnabled();
     }
 
-    public static boolean isDebugEnabled(String loggerName) {
-        return getLogger(loggerName).isDebugEnabled();
+    public static boolean isDebugEnabled(Class<?> caller) {
+        return getLogger(caller).isDebugEnabled();
     }
 
-    public static boolean isInfoEnabled(String loggerName) {
-        return getLogger(loggerName).isInfoEnabled();
+    public static boolean isInfoEnabled(Class<?> caller) {
+        return getLogger(caller).isInfoEnabled();
     }
 
-    public static boolean isWarnEnabled(String loggerName) {
-        return getLogger(loggerName).isWarnEnabled();
+    public static boolean isWarnEnabled(Class<?> caller) {
+        return getLogger(caller).isWarnEnabled();
     }
 
-    public static boolean isErrorEnabled(String loggerName) {
-        return getLogger(loggerName).isErrorEnabled();
+    public static boolean isErrorEnabled(Class<?> caller) {
+        return getLogger(caller).isErrorEnabled();
     }
 }

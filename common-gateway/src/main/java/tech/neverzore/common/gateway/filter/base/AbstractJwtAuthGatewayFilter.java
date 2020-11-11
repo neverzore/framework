@@ -108,21 +108,25 @@ public abstract class AbstractJwtAuthGatewayFilter extends BaseAuthGatewayFilter
         String authToken = getAuthorizeToken(exchange);
 
         if (StringUtils.isEmpty(authToken)) {
-            ServerHttpRequest request = exchange.getRequest();
-            InetSocketAddress remoteAddress = request.getRemoteAddress();
-            String happening = String.format("request %s, uri %s, remote %s, JWT token is missing",
-                    request.getId(), request.getURI(), remoteAddress);
-            Logger.warn(getClass(), LogBuilder.generate(FilterConst.JWT_FILTER, happening));
+            if (Logger.isWarnEnabled(getClass())) {
+                ServerHttpRequest request = exchange.getRequest();
+                InetSocketAddress remoteAddress = request.getRemoteAddress();
+                String happening = String.format("request %s, uri %s, remote %s, JWT token is missing",
+                        request.getId(), request.getURI(), remoteAddress);
+                Logger.warn(getClass(), LogBuilder.generate(FilterConst.JWT_FILTER, happening));
+            }
 
             return unAuthorizedResponse(exchange.getResponse());
         }
 
         if (!isSigned(authToken)) {
-            ServerHttpRequest request = exchange.getRequest();
-            InetSocketAddress remoteAddress = request.getRemoteAddress();
-            String happening = String.format("request %s, uri %s, remote %s, JWT token is unsigned",
-                    request.getId(), request.getURI(), remoteAddress);
-            Logger.warn(getClass(), LogBuilder.generate(FilterConst.JWT_FILTER, happening));
+            if (Logger.isWarnEnabled(getClass())) {
+                ServerHttpRequest request = exchange.getRequest();
+                InetSocketAddress remoteAddress = request.getRemoteAddress();
+                String happening = String.format("request %s, uri %s, remote %s, JWT token is unsigned",
+                        request.getId(), request.getURI(), remoteAddress);
+                Logger.warn(getClass(), LogBuilder.generate(FilterConst.JWT_FILTER, happening));
+            }
 
             return unAuthorizedResponse(exchange.getResponse());
         }

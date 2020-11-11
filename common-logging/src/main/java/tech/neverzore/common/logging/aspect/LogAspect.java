@@ -31,32 +31,36 @@ import tech.neverzore.common.logging.core.LogType;
  * @author: zhouzb
  * @date: 2020/10/29
  */
-@Aspect
 public class LogAspect {
     @Pointcut("@annotation(tech.neverzore.common.logging.aspect.support.Log)")
     public void execute() {
 
     }
 
-    @Around(value = "execute() && @annotation(log)")
-    public Object doAround(ProceedingJoinPoint joinPoint, Log log) throws Throwable {
+    protected void doAroundInternal(JoinPoint joinPoint, Log log, Object retVal) {
         LogType type = log.type();
-
-        long begin = System.currentTimeMillis();
-        Object retVal = joinPoint.proceed();
-        long cost = System.currentTimeMillis() - begin;
-
         Class<?> declaringType = joinPoint.getSignature().getDeclaringType();
+        String name = joinPoint.getSignature().getName();
 
-        String happening = StringUtils.EMPTY;
+        if (Logger.isInfoEnabled(getClass())) {
 
-        if (type.equals(LogType.MONITOR)) {
-            String name = joinPoint.getSignature().getName();
-            happening = String.format("method %s, parameter %s, time cost %sms", name, JSON.toJSONString(joinPoint.getArgs()), cost);
+        }
+        String happening = null;
+        if (LogType.MONITOR.equals(type)) {
+            happening = String.format("class [%s] method [%s] parameter [%s] return [%s]",
+                    declaringType.getSimpleName(),
+                    name,
+                    JSON.toJSONString(joinPoint.getArgs()),
+                    JSON.toJSONString(retVal));
         }
 
-        Logger.info(declaringType, LogBuilder.generate(log.tag(), happening));
+        Logger.info(LogHolder.exists() ? LogHolder.currentLogger() : declaringType.getName(), LogBuilder.generate(log.tag(), happening));
+    }
 
+    @Around(value = "execute() && @annotation(log)")
+    public Object doAround(ProceedingJoinPoint joinPoint, Log log) throws Throwable {
+        Object retVal = joinPoint.proceed();
+        doAroundInternal(joinPoint, log, retVal);
         return retVal;
     }
 
@@ -66,7 +70,7 @@ public class LogAspect {
 
         Class<?> declaringType = joinPoint.getSignature().getDeclaringType();
         String name = joinPoint.getSignature().getName();
-        String happening = String.format("method %s execute failed", name);
+        String happening = String.format("method [%s] parameter [%s] failed", name, JSON.toJSONString(joinPoint.getArgs()));
 
         Logger.error(declaringType,
                 LogBuilder.generate(log.tag(), happening, t.getMessage(), "", type),
@@ -79,7 +83,7 @@ public class LogAspect {
         if (!log.value().isEmpty()) {
             loggerName = log.value();
         } else {
-            loggerName = joinPoint.getSignature().getDeclaringTypeName();
+            loggerName = joinPoint.getSignature().getDeclaringType().getSimpleName();
         }
         LogHolder.currentLogger(loggerName);
     }
