@@ -23,7 +23,6 @@ import org.apache.commons.lang3.StringUtils;
  * @date 2019/5/23
  */
 public class LogContent {
-    private static final String APP = "[APP ";
     private static final String TYPE = "[TYPE ";
     private static final String HAP = "[HAP ";
     private static final String ERR = "[ERR ";
@@ -31,25 +30,23 @@ public class LogContent {
     private static final String CLOSURE = "] ";
 
     private final LogType type;
-    private final String tag;
     private final String happening;
     private final String error;
     private final String suggestion;
 
-    LogContent(String tag, String happening) {
-        this(tag, happening, StringUtils.EMPTY);
+    LogContent(String happening) {
+        this(happening, StringUtils.EMPTY);
     }
 
-    LogContent(String tag, String happening, String error) {
-        this(tag, happening, error, "StringUtils");
+    LogContent(String happening, String error) {
+        this(happening, error, StringUtils.EMPTY);
     }
 
-    LogContent(String tag, String happening, String error, String suggestion) {
-        this(tag, happening, error, suggestion, LogType.NORMAL);
+    LogContent(String happening, String error, String suggestion) {
+        this(happening, error, suggestion, LogType.NORMAL);
     }
 
-    LogContent(String tag, String happening, String error, String suggestion, LogType type) {
-        this.tag = tag;
+    LogContent(String happening, String error, String suggestion, LogType type) {
         this.type = type;
         this.happening = happening;
         this.error = error;
@@ -60,7 +57,6 @@ public class LogContent {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder()
-                .append(APP).append(this.tag).append(CLOSURE)
                 .append(TYPE).append(this.type.getDesc()).append(CLOSURE);
 
         if (!StringUtils.isEmpty(this.happening)) {

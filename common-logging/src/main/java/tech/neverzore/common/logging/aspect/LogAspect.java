@@ -17,7 +17,6 @@
 package tech.neverzore.common.logging.aspect;
 
 import com.alibaba.fastjson.JSON;
-import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;

@@ -24,19 +24,9 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class LogBuilder {
     private LogType type;
-    private String tag;
     private String happening;
     private String error;
     private String suggestion;
-
-    public String getTag() {
-        return tag;
-    }
-
-    public LogBuilder setTag(String tag) {
-        this.tag = tag;
-        return this;
-    }
 
     public LogType getType() {
         return type;
@@ -56,12 +46,22 @@ public class LogBuilder {
         return this;
     }
 
+    public LogBuilder setHappening(String happening, Object... args) {
+        this.happening = String.format(happening, args);
+        return this;
+    }
+
     public String getError() {
         return error;
     }
 
     public LogBuilder setError(String error) {
         this.error = error;
+        return this;
+    }
+
+    public LogBuilder setError(String error, Object... args) {
+        this.error = String.format(error, args);
         return this;
     }
 
@@ -74,8 +74,12 @@ public class LogBuilder {
         return this;
     }
 
+    public LogBuilder setSuggestion(String suggestion, Object... args) {
+        this.suggestion = String.format(suggestion, args);
+        return this;
+    }
+
     private LogBuilder() {
-        this.tag = StringUtils.EMPTY;
         this.type = LogType.NORMAL;
     }
 
@@ -84,26 +88,22 @@ public class LogBuilder {
     }
 
     public LogContent build() {
-        return new LogContent(this.tag, this.happening, this.error, this.suggestion, this.type);
+        return new LogContent(this.happening, this.error, this.suggestion, this.type);
     }
 
     public static String generate(String happening) {
         return generate(StringUtils.EMPTY, happening);
     }
 
-    public static String generate(String tag, String happening) {
-        return generate(tag, happening, StringUtils.EMPTY);
+    public static String generate(String happening, String error) {
+        return generate(happening, error, StringUtils.EMPTY);
     }
 
-    public static String generate(String tag, String happening, String error) {
-        return generate(tag, happening, error, StringUtils.EMPTY);
+    public static String generate(String happening, String error, String suggestion) {
+        return generate(happening, error, suggestion, LogType.NORMAL);
     }
 
-    public static String generate(String tag, String happening, String error, String suggestion) {
-        return generate(tag, happening, error, suggestion, LogType.NORMAL);
-    }
-
-    public static String generate(String tag, String happening, String error, String suggestion, LogType logType) {
-        return LogBuilder.builder().setTag(tag).setType(logType).setHappening(happening).setError(error).setSuggestion(suggestion).build().toString();
+    public static String generate(String happening, String error, String suggestion, LogType logType) {
+        return LogBuilder.builder().setType(logType).setHappening(happening).setError(error).setSuggestion(suggestion).build().toString();
     }
 }
