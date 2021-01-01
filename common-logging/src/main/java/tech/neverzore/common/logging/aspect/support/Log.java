@@ -44,8 +44,8 @@ public @interface Log {
     String value() default "";
 
     /**
-     * 日志标识
-     * @return  tag
+     * 日志Logger
+     * @return  logger name
      */
-    String tag() default "";
+    String logger() default "";
 }

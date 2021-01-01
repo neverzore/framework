@@ -321,7 +321,6 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
                 String happening = String.format("request %s, uri %s, remote %s, RequestSignature parameters incomplete",
                         request.getId(), String.valueOf(request.getURI()), request.getRemoteAddress());
                 LogContent content = LogBuilder.builder()
-                        .setTag(FilterConst.SIGNATURE_FILTER)
                         .setHappening(happening)
                         .build();
                 Logger.warn(getClass(), content.toString());
@@ -373,7 +372,6 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
         if (Logger.isDebugEnabled(getClass())) {
             String happening = String.format("requestSignature content %s, requestSignature original %s, requestSignature hash %s", concatContent, rSignature, cSignature);
             LogContent logContent = LogBuilder.builder()
-                    .setTag(FilterConst.SIGNATURE_FILTER)
                     .setHappening(happening)
                     .setType(LogType.MONITOR)
                     .build();
@@ -387,7 +385,6 @@ public abstract class AbstractSignatureVerifyGatewayFilter extends BaseAuthGatew
                 String happening = String.format("request %s, uri %s, remote %s, requestSignature verified failed due to requestSignature mismatch.",
                         request.getId(), String.valueOf(request.getURI()), request.getRemoteAddress());
                 LogContent logContent = LogBuilder.builder()
-                        .setTag(FilterConst.SIGNATURE_FILTER)
                         .setHappening(happening)
                         .build();
                 Logger.warn(getClass(), logContent.toString());

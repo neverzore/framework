@@ -41,9 +41,6 @@ public class LogAspect {
         Class<?> declaringType = joinPoint.getSignature().getDeclaringType();
         String name = joinPoint.getSignature().getName();
 
-        if (Logger.isInfoEnabled(getClass())) {
-
-        }
         String happening = null;
         if (LogType.MONITOR.equals(type)) {
             happening = String.format("class [%s] method [%s] parameter [%s] return [%s]",
@@ -53,7 +50,7 @@ public class LogAspect {
                     JSON.toJSONString(retVal));
         }
 
-        Logger.info(LogHolder.exists() ? LogHolder.currentLogger() : declaringType.getName(), LogBuilder.generate(log.tag(), happening));
+        Logger.info(LogHolder.exists() ? LogHolder.currentLogger() : declaringType.getName(), LogBuilder.generate(log.logger(), happening));
     }
 
     @Around(value = "execute() && @annotation(log)")
@@ -72,15 +69,15 @@ public class LogAspect {
         String happening = String.format("method [%s] parameter [%s] failed", name, JSON.toJSONString(joinPoint.getArgs()));
 
         Logger.error(declaringType,
-                LogBuilder.generate(log.tag(), happening, t.getMessage(), "", type),
+                LogBuilder.generate(happening, t.getMessage(), "", type),
                 t);
     }
 
     @Before(value = "execute() && @annotation(log)")
     public void doBefore(JoinPoint joinPoint, Log log) {
         String loggerName;
-        if (!log.value().isEmpty()) {
-            loggerName = log.value();
+        if (!log.logger().isEmpty()) {
+            loggerName = log.logger();
         } else {
             loggerName = joinPoint.getSignature().getDeclaringType().getSimpleName();
         }
